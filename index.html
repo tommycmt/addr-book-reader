@@ -13,6 +13,22 @@
     <pre id="output"></pre> 
       
     <script type="text/javascript"> 
+        function downloadString(text) {
+          var fileName = "addresses.csv";
+          var fileType = "text/csv";
+          var blob = new Blob([text], { type: fileType });
+
+          var a = document.createElement('a');
+          a.download = fileName;
+          a.href = URL.createObjectURL(blob);
+          a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+          a.style.display = "none";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+        }
+    
         var keys = new Set();
         var addresses = [];
         document.getElementById('inputfile') 
@@ -26,7 +42,7 @@
                 lines = fr.result.split("\n");
                 var address = {};
                 lines.forEach(function(line) {
-                  if (line.length > 1) {
+                  if (line.length > 4) {
                     kvp = line.split(": ");
                     k = kvp[0];
                     if (!keys.has(k)) {
@@ -43,7 +59,7 @@
                 var str = "";
                 var s = "";
                 keys.forEach(function(key) {
-                  s += key + ",";
+                  s += key + ";";
                 })
                 str += s + "\n";
                 addresses.forEach(function(address) {
@@ -52,16 +68,18 @@
                     if (address[key] != undefined) {
                       s += address[key];
                     }
-                    s += ",";
+                    s += ";";
                   })
                   str += s + "\n";
                 })
-                console.log(str);
+                downloadString(str);
                 
             }
               
             fr.readAsText(this.files[0]); 
         }) 
+        
+
     </script> 
 </body> 
   
