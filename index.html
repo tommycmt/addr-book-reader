@@ -13,6 +13,15 @@
     <pre id="output"></pre> 
       
     <script type="text/javascript"> 
+        function isEmpty(obj) {
+            for(var prop in obj) {
+                if(obj.hasOwnProperty(prop))
+                    return false;
+            }
+
+            return true;
+        }
+    
         function downloadString(text) {
           var fileName = "addresses.csv";
           var fileType = "text/csv";
@@ -63,6 +72,7 @@
                 })
                 str += s + "\n";
                 addresses.forEach(function(address) {
+                  if (!isEmpty(address)) {
                   s = "";
                   keys.forEach(function(key) {
                     if (address[key] != undefined) {
@@ -71,6 +81,7 @@
                     s += ";";
                   })
                   str += s + "\n";
+                  }
                 })
                 downloadString(str);
                 
